@@ -1,0 +1,43 @@
+{
+  "builders": [
+    {
+      "type": "virtualbox-iso",
+      "vboxmanage": [
+        [ "modifyvm", "{{.Name}}", "--memory", "8192" ],
+        [ "modifyvm", "{{.Name}}", "--vram", "128" ],
+        [ "modifyvm", "{{.Name}}", "--cpus", "4" ]
+      ],
+      "guest_os_type": "Windows10_64",
+      "headless": "{{ user `headless` }}",
+      "iso_url": "{{ user `iso_url` }}",
+      "iso_checksum": "{{ user `iso_checksum` }}",
+      "iso_checksum_type": "sha1",
+      "communicator": "winrm",
+      "winrm_username": "vagrant",
+      "winrm_password": "vagrant",
+      "winrm_timeout": "6h",
+      "guest_additions_mode": "disable",
+      "shutdown_command": "C:/windows/system32/sysprep/sysprep.exe /generalize /oobe /unattend:C:/Windows/Panther/Unattend/unattend.xml /quiet /shutdown",
+      "shutdown_timeout": "15m",
+      "floppy_files": [
+        "answer_files/win10/Autounattend.xml",
+        "scripts/postunattend.xml",
+        "scripts/boxstarter.ps1",
+        "scripts/package.ps1"
+      ]
+    }
+  ],
+  "post-processors": [
+    {
+      "type": "vagrant",
+      "keep_input_artifact": true,
+      "output": "windows10-{{.Provider}}.box",
+      "vagrantfile_template": "vagrantfile-windows.template"
+    }
+  ],
+  "variables": {
+    "headless": "false",
+    "iso_checksum": "30AD1CDF5D0670F12788005131E24862F6AB8AAB",
+    "iso_url": "/home/indomitable/ISOs/en_windows_10_enterprise_x64_dvd_6851151.iso"
+  }
+}

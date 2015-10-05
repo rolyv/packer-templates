@@ -7,12 +7,6 @@ Set-ItemProperty -Path $pageFileMemoryKey -Name PagingFiles -Value ""
 
 Update-ExecutionPolicy -Policy Unrestricted
 
-Write-BoxstarterMessage "Removing unused features..."
-Remove-WindowsFeature -Name 'Powershell-ISE'
-Get-WindowsFeature | 
-? { $_.InstallState -eq 'Available' } | 
-Uninstall-WindowsFeature -Remove
-
 Install-WindowsUpdate -AcceptEula
 if(Test-PendingReboot){ Invoke-Reboot }
 
